@@ -16,14 +16,13 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 	"sync"
 	"time"
 
-	"go.thethings.network/lorawan-webhook-templates/schema"
+	"github.com/TheThingsNetwork/lorawan-webhook-templates/schema"
 	"gopkg.in/yaml.v2"
 )
 
@@ -32,7 +31,7 @@ const numWorkers = 12
 
 func validateTemplate(baseDir, templateID string) error {
 	templateYml := filepath.Join(baseDir, templateID+".yml")
-	b, err := ioutil.ReadFile(templateYml)
+	b, err := os.ReadFile(templateYml)
 	if err != nil {
 		return err
 	}
@@ -45,7 +44,7 @@ func validateTemplate(baseDir, templateID string) error {
 
 func readTemplatesIndex(baseDir string) ([]string, error) {
 	templatesYml := filepath.Join(baseDir, "templates.yml")
-	b, err := ioutil.ReadFile(templatesYml)
+	b, err := os.ReadFile(templatesYml)
 	if err != nil {
 		return nil, err
 	}
@@ -83,6 +82,7 @@ func main() {
 			for templateID := range templateCh {
 				if err := validateTemplate(baseDir, templateID); err != nil {
 					fmt.Fprintf(os.Stderr, "Webhook template %s ERROR: %v\n", templateID, err)
+					rc = 1
 				} else {
 					fmt.Printf("Webhook template %s OK\n", templateID)
 				}

@@ -1,4 +1,4 @@
-module go.thethings.network/lorawan-webhook-templates/schema
+module github.com/TheThingsNetwork/lorawan-webhook-templates/schema
 
 go 1.16
 
